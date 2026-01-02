@@ -1,4 +1,5 @@
 use tauri::{
+    image::Image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     webview::WebviewWindowBuilder,
@@ -252,6 +253,9 @@ pub fn run() {
             win_start_drag
         ])
         .setup(|app| {
+            // Load app icon
+            let icon = Image::from_bytes(include_bytes!("../icons/icon.png"))?;
+
             // Create the Perplexity window (chromeless with injected titlebar)
             let _perplexity_window = WebviewWindowBuilder::new(
                 app,
@@ -259,6 +263,7 @@ pub fn run() {
                 WebviewUrl::External("https://www.perplexity.ai".parse().unwrap()),
             )
             .title("Perplexity")
+            .icon(icon.clone())?
             .inner_size(1200.0, 800.0)
             .min_inner_size(800.0, 600.0)
             .decorations(false)
@@ -277,7 +282,7 @@ pub fn run() {
 
             // Build tray icon
             let _tray = TrayIconBuilder::new()
-                .icon(app.default_window_icon().unwrap().clone())
+                .icon(icon.clone())
                 .menu(&menu)
                 .tooltip("Perplexity")
                 .on_menu_event(|app, event| match event.id.as_ref() {
