@@ -1,5 +1,6 @@
 name: Build & Release
-
+permissions:
+  contents: write
 on:
   push:
     tags:
@@ -60,7 +61,7 @@ jobs:
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: 'Perplexity Desktop ${{ github.ref_name }}'
